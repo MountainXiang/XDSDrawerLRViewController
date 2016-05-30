@@ -2,17 +2,11 @@
 //  XDSDrawerLRViewController.m
 //  TheHomeOfCars
 //
-//  Created by 项大山 on 15-10-11.
+//  Created by XDS on 15-10-11.
 //  Copyright (c) 2015年 xds. All rights reserved.
 //
 
 #import "XDSDrawerLRViewController.h"
-#import "LeftViewController.h"
-#import "MainTabBarController.h"
-#import "DetailViewController.h"
-#import "AppDelegate.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "ArticlesViewController.h"
 
 #define kScreenW        [UIScreen mainScreen].bounds.size.width
 #define kScreenH        [UIScreen mainScreen].bounds.size.height
@@ -20,7 +14,7 @@
 //#define kLeftViewW      _leftCtrl.view.frame.size.width//左侧视图宽度
 //#define kRightViewW     _rightCtrl.view.frame.size.width//右侧视图宽度
 
-@interface XDSDrawerLRViewController ()<LeftViewControllerDelegate, UINavigationControllerDelegate,UIImagePickerControllerDelegate,ArticleViewControllerDelegate>//遵循左侧视图协议方法，遵循系统相册控制器协议方法;遵循详情协议，实现播放视频方法
+@interface XDSDrawerLRViewController ()
 {
     @private
     MainTabBarController *_mainCtrl;
@@ -47,16 +41,7 @@
     _mainCtrl = (MainTabBarController *)mainCtrl;
     _leftCtrl = (LeftViewController *)leftCtrl;
     _rightCtrl = rightCtrl;
-    
-    
-    //设置代理
-    _leftCtrl.delegate = self;
-    
-    ArticlesViewController *articleVC = _mainCtrl.articleVC;
-    
-    articleVC.delegate = self;
-    
-    
+
     //初始化
     _mainViewTransparentCanChanged = YES;
     _transformCoefficient = 0;
@@ -268,21 +253,6 @@
     return YES;
 }
 
-#pragma mark LeftViewControllerDelegate
-- (void)presentPickerViewControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType {
-    if (sourceType == UIImagePickerControllerSourceTypeCamera) {
-        UIImagePickerController *pickerVC = [[UIImagePickerController alloc] init];
-        pickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;
-        pickerVC.delegate = self;
-        [self presentViewController:pickerVC animated:YES completion:nil];
-    } else if (sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum){
-        UIImagePickerController *pickerVC = [[UIImagePickerController alloc] init];
-        pickerVC.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        pickerVC.delegate = self;
-        [self presentViewController:pickerVC animated:YES completion:nil];
-    }
-}
-
 #pragma mark //改变主视图背景颜色
 - (void)alternageDayAndNightWithHCIsDay:(BOOL)isDay {
     if (isDay) {
@@ -292,36 +262,6 @@
         _mainCtrl.firstTableView.backgroundColor = [UIColor blackColor];
         [_mainCtrl.firstTableView reloadData];
     }
-}
-
-#pragma mark UIImagePickerViewControllerDelegate
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    NSData *imageData = UIImagePNGRepresentation(image);
-    [HCTool setObject:imageData forKey:HCUserIcon];
-    [_leftCtrl.iconBtn setBackgroundImage:image forState:UIControlStateNormal];
-    [self showLeftViewCtrl];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self showLeftViewCtrl];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark DetailViewDelegate
-- (void)playVideo:(NSString *)weburl {
-    //播放视频时，允许横屏
-    AppDelegate *delegate = [UIApplication sharedApplication].delegate;
-    delegate.canRotate = YES;
-    MPMoviePlayerViewController *MPV = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:weburl]];
-    [self presentViewController:MPV animated:YES completion:nil];
-}
-
-#pragma mark 视频播放结束，不允许横屏
-- (void)playFinished {
-    AppDelegate *delegate = [UIApplication sharedApplication].delegate;
-    delegate.canRotate = NO;
 }
 
 - (void)viewDidLoad {
