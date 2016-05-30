@@ -2,7 +2,7 @@
 //  XDSDrawerLRViewController.h
 //  TheHomeOfCars
 //
-//  Created by 项大山 on 15-10-11.
+//  Created by XDS on 15-10-11.
 //  Copyright (c) 2015年 xds. All rights reserved.
 //
 
