@@ -1,6 +1,5 @@
 //
 //  XDSDrawerLRViewController.m
-//  TheHomeOfCars
 //
 //  Created by XDS on 15-10-11.
 //  Copyright (c) 2015年 xds. All rights reserved.
@@ -10,16 +9,13 @@
 
 #define kScreenW        [UIScreen mainScreen].bounds.size.width
 #define kScreenH        [UIScreen mainScreen].bounds.size.height
-//可能会改变的值不能设置为宏，数据容易混乱出错
-//#define kLeftViewW      _leftCtrl.view.frame.size.width//左侧视图宽度
-//#define kRightViewW     _rightCtrl.view.frame.size.width//右侧视图宽度
 
 @interface XDSDrawerLRViewController ()
 {
     @private
-    MainTabBarController *_mainCtrl;
+    UIViewController *_mainCtrl;
     
-    LeftViewController *_leftCtrl;
+    UIViewController *_leftCtrl;
     
     UIViewController *_rightCtrl;
     
@@ -38,17 +34,14 @@
 @implementation XDSDrawerLRViewController
 
 - (id)initWithMainCtrl:(UIViewController *)mainCtrl leftCtrl:(UIViewController *)leftCtrl rightCtrl:(UIViewController *)rightCtrl backGroundImage:(UIImage *)backGroundImage{
-    _mainCtrl = (MainTabBarController *)mainCtrl;
-    _leftCtrl = (LeftViewController *)leftCtrl;
+    _mainCtrl = mainCtrl;
+    _leftCtrl = leftCtrl;
     _rightCtrl = rightCtrl;
 
     //初始化
     _mainViewTransparentCanChanged = YES;
     _transformCoefficient = 0;
     _tapCanBack = YES;
-    
-    //监听视频播放完毕通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playFinished) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     
     if (self) {
         UIImageView *iv = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -251,17 +244,6 @@
 //#warning 隐藏状态栏，主视图为TabbarController时建议隐藏，可以删除此处代码
 - (BOOL)prefersStatusBarHidden {
     return YES;
-}
-
-#pragma mark //改变主视图背景颜色
-- (void)alternageDayAndNightWithHCIsDay:(BOOL)isDay {
-    if (isDay) {
-        _mainCtrl.firstTableView.backgroundColor = [UIColor whiteColor];
-        [_mainCtrl.firstTableView reloadData];
-    } else {
-        _mainCtrl.firstTableView.backgroundColor = [UIColor blackColor];
-        [_mainCtrl.firstTableView reloadData];
-    }
 }
 
 - (void)viewDidLoad {
